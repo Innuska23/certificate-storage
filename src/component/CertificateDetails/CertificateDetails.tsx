@@ -1,19 +1,18 @@
 import React from 'react';
-import { Certificate } from '../../types/types';
 
-interface CertificateDetailsProps {
-    certificate: Certificate | null;
-}
+import { useCertificate } from '../../hooks/useCertificate';
 
-const CertificateDetails: React.FC<CertificateDetailsProps> = ({ certificate }) => {
+const CertificateDetails: React.FC = () => {
+    const { certificateSelected } = useCertificate();
+
     return (
         <div className="border-2 border-gray-400 p-4 flex flex-col items-start">
-            {certificate ? (
+            {certificateSelected ? (
                 <div>
-                    <p>Common Name: {certificate.commonName}</p>
-                    <p>Issuer CN: {certificate.issuerCN}</p>
-                    <p>Valid From: {certificate.validFrom}</p>
-                    <p>Valid To: {certificate.validTo}</p>
+                    <p>Common Name: {certificateSelected.commonName}</p>
+                    <p>Issuer CN: {certificateSelected.issuerCN}</p>
+                    <p>Valid From: {certificateSelected.validFrom}</p>
+                    <p>Valid To: {certificateSelected.validTo}</p>
                 </div>
             ) : (
                 <div className="text-gray-500">No certificate selected</div>

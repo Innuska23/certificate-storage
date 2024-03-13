@@ -3,29 +3,27 @@ import React from 'react';
 import { Certificate } from '../../types/types';
 import { useCertificate } from '../../hooks/useCertificate';
 
-interface CertificateListProps {
-    onCertificateSelect: (certificate: Certificate) => void;
-}
 
-const CertificateList: React.FC<CertificateListProps> = ({ onCertificateSelect }) => {
-    const { certificateList, setCertificateSelected } = useCertificate();
+const CertificateList: React.FC = () => {
+    const { certificateList, setCertificateSelected, certificateSelected } = useCertificate();
 
     const handleSelectCertificate = (certificate: Certificate) => () => {
         setCertificateSelected(certificate);
-        onCertificateSelect(certificate);
     };
 
     return (
-        <div className="w-1/2">
-            <h2 className="text-lg font-bold mb-4">Certificates</h2>
+        <div className="w-full">
             <ul>
                 {certificateList?.map((certificate, index) => (
                     <li
                         key={index}
-                        className="bg-gray-200 p-2 mb-2 rounded cursor-pointer hover:bg-gray-300"
+                        className={
+                            `${certificateSelected?.commonName === certificate?.commonName ? 'bg-gray-300' : 'bg-gray-200'}  flex justify-between p-4 rounded cursor-pointer hover:bg-gray-300`}
                         onClick={handleSelectCertificate(certificate)}
                     >
-                        {certificate.commonName}
+                        <span>{certificate.commonName}</span>
+                        {certificateSelected?.commonName === certificate?.commonName && (
+                            <span className="text-right">&#9658;</span>)}
                     </li>
                 ))}
             </ul>
