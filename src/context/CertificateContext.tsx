@@ -44,6 +44,7 @@ export const CertificateProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   const addCertificate = (certificate: Certificate) => {
     setCertificateList((prev) => [...prev, certificate])
+    setCertificateSelected(certificate)
   }
 
   return (

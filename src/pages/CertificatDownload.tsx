@@ -18,7 +18,6 @@ const CertificateDownload = () => {
             (cert) => cert.commonName === certificate.commonName
         );
         if (existingCertificate) {
-            console.log(`Сертифікат з назвою "${certificate.commonName}" вже існує`);
             toast.error(`Сертифікат з назвою "${certificate.commonName}" вже існує`);
             return;
         }
@@ -49,25 +48,27 @@ const CertificateDownload = () => {
 
     const parseCertificate = (file: File) => {
         const reader = new FileReader();
+
         reader.readAsBinaryString(file);
+
         reader.onload = () => {
             try {
                 const result = ASN1.decode(reader.result as string);
 
                 if (result.typeName() !== 'SEQUENCE') {
-                    toast.error("Неправильна структура конверта сертифіката (очікується SEQUENCE)");
                     throw new Error('Неправильна структура конверта сертифіката (очікується SEQUENCE)');
                 }
+
                 const tbsCertificate = result.sub?.[0];
                 const certValues = parseTbsCertificate(tbsCertificate);
-                if (certValues) {
+
+                if (certValues && Object.values(certValues).every((element) => !!element)) {
                     handleAddCertificate(certValues);
                 } else {
-                    console.log("Не всі необхідні поля заповнені");
+                    throw new Error("Не всі необхідні поля знайдені");
                 }
             } catch (e: any) {
-                console.log(e.message || e);
-                toast.error(e?.message || "Помилка не визначена");
+                toast.error(e?.message || e || "Помилка не визначена");
             }
         };
         reader.onerror = function () {
